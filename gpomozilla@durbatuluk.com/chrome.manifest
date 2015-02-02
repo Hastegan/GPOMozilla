@@ -1,0 +1,3 @@
+content gpomozilla chrome/gpomozilla/content/
+
+overlay chrome://messenger/content/messenger.xul chrome://gpomozilla/content/gpomozilla.xul
