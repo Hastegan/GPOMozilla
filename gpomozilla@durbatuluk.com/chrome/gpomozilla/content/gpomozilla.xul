@@ -2,7 +2,6 @@
 <overlay id="gpomozilla" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="gpomozilla.js" />
 	<statusbar id="status-bar">
-    <!-- Icône de l'extension et sa tooltip, affichées en bas à droite -->
 		<statusbarpanel tooltiptext="Extension failed to load preferences" class="statusbarpanel-iconic" id="gpo-panel" src="chrome://gpomozilla/content/img/gpo_fail.png"/>
 	</statusbar>
 </overlay>

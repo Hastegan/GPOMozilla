@@ -1,10 +1,7 @@
 /**
- * Author : Hastegan (hastegan@durbatuluk.com)
+ * Author : Hastegan
  *
  * Version : 0.1.3
- *
- *
- * For any question or query email me at hastegan@durbatuluk.com
  *
  * GPOMozilla reads Group Policy from "User Configuration" part (class USER) and
  * apply them to Mozilla preferences (Thunerbird, Firefox, Seamonkey).
@@ -12,11 +9,7 @@
  * This extension needs Gecko 1.8 or higher to work. In some recent application
  * the icon is not shown in the status bar, the problem will be fixed if possible
  * (seems complicated with newest versions of Firefox). Stay tuned for updates !
- *
- *
- * "One GPO to rule them all, one GPO to edit them
- *  One GPO to read them all, and with XPCOM bind them."
- *
+ * *
  * Usefull links :
  *   - XPCOM intergace to access Windows Registry :
  *         https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIWindowsRegKey
@@ -25,43 +18,43 @@
  *         https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Preferences
  */
 
-var gpoThunder = {
+var gpoMozilla = {
 
-	registryBasePath		: "",
-	defaultPath				: "",
-	lockedPath				: "",
-	reg						: "",
-	prefService				: "",
-	updateDisabled			: false,
-	modifiedElements		: 0,
-	error						: false,
-	errors					: [],
-	errorType				: 0,
+	registryBasePath : "",
+	defaultPath      : "",
+	lockedPath       : "",
+	reg              : "",
+	prefService      : "",
+	updateDisabled   : false,
+	modifiedElements : 0,
+	error            : false,
+	errors           : [],
+	errorType        : 0,
 
 	exists : function(name) {
 		var parentName = name.substring(0,name.lastIndexOf(".")) + ".userName";
 
-		var prefBranch = gpoThunder.prefService.getBranch(parentName);
-		var lockBranch = gpoThunder.prefService.getDefaultBranch(parentName);
+		var prefBranch = gpoMozilla.prefService.getBranch(parentName);
+		var lockBranch = gpoMozilla.prefService.getDefaultBranch(parentName);
 
 		return (prefBranch.getPrefType("") != 0 || lockBranch.getPrefType("") != 0);
 	},
 
 	/**
 	 * Read Windows Registry entry
-	 * @param String value	Entry name
-	 * @return					Registry Entry
+	 * @param     String value    Entry name
+	 * @return                    Registry Entry
 	 */
 	readRegistryValue : function(value) {
-		switch (gpoThunder.reg.getValueType(value)) {
-			case gpoThunder.reg.TYPE_STRING:
-				return gpoThunder.reg.readStringValue(value);
-			case gpoThunder.reg.TYPE_BINARY:
-				return gpoThunder.reg.readBinaryValue(value);
-			case gpoThunder.reg.TYPE_INT:
-				return gpoThunder.reg.readIntValue(value);
-			case gpoThunder.reg.TYPE_INT64:
-				return gpoThunder.reg.readInt64Value(value);
+		switch (gpoMozilla.reg.getValueType(value)) {
+			case gpoMozilla.reg.TYPE_STRING:
+				return gpoMozilla.reg.readStringValue(value);
+			case gpoMozilla.reg.TYPE_BINARY:
+				return gpoMozilla.reg.readBinaryValue(value);
+			case gpoMozilla.reg.TYPE_INT:
+				return gpoMozilla.reg.readIntValue(value);
+			case gpoMozilla.reg.TYPE_INT64:
+				return gpoMozilla.reg.readInt64Value(value);
 		}
 		// If type is not found
 		return null;
@@ -69,19 +62,18 @@ var gpoThunder = {
 
 	/**
 	 * Update Mozilla preference
-	 * @param	String name 	Preference name
-	 * @param	Mixed value 	Preference value
-	 * @return	Boolean			Operation result
+	 * @param     String name    Preference name
+	 * @param     Mixed value    Preference value
+	 * @return    Boolean        Operation result
 	 */
 	writePrefValue : function(name, value, locked) {
 		var prefBranch = null;
 
-		// Branch type is chosen according to locked value
 		if (locked) {
-			prefBranch = gpoThunder.prefService.getDefaultBranch(name);
+			prefBranch = gpoMozilla.prefService.getDefaultBranch(name);
 		}
 		else {
-			prefBranch = gpoThunder.prefService.getBranch(name);
+			prefBranch = gpoMozilla.prefService.getBranch(name);
 		}
 
 		// If preference contains a #, other possible occurences must be found
@@ -122,6 +114,7 @@ var gpoThunder = {
 
 			case prefBranch.PREF_INT:
 				prefBranch.setIntPref("", value);
+
 				if (locked)
 					prefBranch.lockPref("");
 
@@ -130,7 +123,7 @@ var gpoThunder = {
 
 			case prefBranch.PREF_BOOL:
 				if (name == "app.update.enabled" && value == false)
-					gpoThunder.updateDisabled=true;
+					gpoMozilla.updateDisabled=true;
 
 				if (value == "false" || value == "0")
 					prefBranch.setBoolPref("", false);
@@ -145,10 +138,11 @@ var gpoThunder = {
 
 			default:
 				/**
-				 * If the type is not found it means that the preference does not
-				 * exist. It is necessary to define the type to use the correct setter
+				 * If the type is not found it means that the preference does
+				 * not exist.
+				 * It is necessary to define the type to use the correctsetter
 				 */
-				switch(gpoThunder.getLocalType(value)) {
+				switch(gpoMozilla.getLocalType(value)) {
 					case "string":
 						prefBranch.setCharPref("", value);
 
@@ -168,7 +162,7 @@ var gpoThunder = {
 						return true;
 
 					case "bool":
-						if (gpoThunder.bool(value)) {
+						if (gpoMozilla.bool(value)) {
 							prefBranch.setBoolPref("", false);
 						}
 						else {
@@ -190,13 +184,18 @@ var gpoThunder = {
 	},
 
 	/**
-	 * Define the correct method to define Mozilla preference
+	 *
+	 */
+	/**
+	 * Set a preference
+	 * @param {[type]} type   [description]
+	 * @param {[type]} locked [description]
 	 */
 	setPref : function(type, locked) {
 		if (locked)
-			gpoThunder.setLockPref(type);
+			gpoMozilla.setLockPref(type);
 		else
-			gpoThunder.setUserPref(type);
+			gpoMozilla.setUserPref(type);
 	},
 
 	/**
@@ -204,17 +203,17 @@ var gpoThunder = {
 	 */
 	setLockPref : function(type) {
 		// Registry is opend is read mode
-		gpoThunder.reg.open(type, gpoThunder.registryBasePath + "\\" + gpoThunder.lockedPath, gpoThunder.reg.ACCESS_READ);
-		for (var i = 0; i < gpoThunder.reg.valueCount; i++) {
+		gpoMozilla.reg.open(type, gpoMozilla.registryBasePath + "\\" + gpoMozilla.lockedPath, gpoMozilla.reg.ACCESS_READ);
+		for (var i = 0; i < gpoMozilla.reg.valueCount; i++) {
 
 			// Getting preference information from registry
-			var prefName = gpoThunder.reg.getValueName(i);
-			var prefValue = gpoThunder.readRegistryValue(prefName);
+			var prefName = gpoMozilla.reg.getValueName(i);
+			var prefValue = gpoMozilla.readRegistryValue(prefName);
 
 			// Preference is updated
-			gpoThunder.writePrefValue(prefName, prefValue, true);
+			gpoMozilla.writePrefValue(prefName, prefValue, true);
 		}
-		gpoThunder.reg.close();
+		gpoMozilla.reg.close();
 	},
 
 	/**
@@ -222,17 +221,17 @@ var gpoThunder = {
 	 */
 	setUserPref : function(type) {
 		// Ouverture du registre Windows en lecture
-		gpoThunder.reg.open(type, gpoThunder.registryBasePath + "\\" + gpoThunder.defaultPath, gpoThunder.reg.ACCESS_READ);
-		for (var i = 0; i < gpoThunder.reg.valueCount; i++) {
+		gpoMozilla.reg.open(type, gpoMozilla.registryBasePath + "\\" + gpoMozilla.defaultPath, gpoMozilla.reg.ACCESS_READ);
+		for (var i = 0; i < gpoMozilla.reg.valueCount; i++) {
 
 			// Getting preference information from registry
-			var prefName = gpoThunder.reg.getValueName(i);
-			var prefValue = gpoThunder.readRegistryValue(prefName);
+			var prefName = gpoMozilla.reg.getValueName(i);
+			var prefValue = gpoMozilla.readRegistryValue(prefName);
 
 			// Preference is updated
-			gpoThunder.writePrefValue(prefName, prefValue, false);
+			gpoMozilla.writePrefValue(prefName, prefValue, false);
 		}
-		gpoThunder.reg.close();
+		gpoMozilla.reg.close();
 	},
 
 	/**
@@ -273,9 +272,9 @@ var gpoThunder = {
 
 		try {
 			// Apply locked preferences from GPO
-			gpoThunder.reg.open(gpoThunder.reg.ROOT_KEY_CURRENT_USER, gpoThunder.registryBasePath, gpoThunder.reg.ACCESS_READ);
-			if (gpoThunder.reg.hasChild(gpoThunder.lockedPath)) {
-				gpoThunder.setPref(gpoThunder.reg.ROOT_KEY_CURRENT_USER, true);
+			gpoMozilla.reg.open(gpoMozilla.reg.ROOT_KEY_CURRENT_USER, gpoMozilla.registryBasePath, gpoMozilla.reg.ACCESS_READ);
+			if (gpoMozilla.reg.hasChild(gpoMozilla.lockedPath)) {
+				gpoMozilla.setPref(gpoMozilla.reg.ROOT_KEY_CURRENT_USER, true);
 			}
 			else {
 				// If the path is empty
@@ -283,9 +282,9 @@ var gpoThunder = {
 			}
 
 			// Apply default preferences from GPO
-			gpoThunder.reg.open(gpoThunder.reg.ROOT_KEY_CURRENT_USER, gpoThunder.registryBasePath, gpoThunder.reg.ACCESS_READ);
-			if (gpoThunder.reg.hasChild(gpoThunder.defaultPath)) {
-				gpoThunder.setPref(gpoThunder.reg.ROOT_KEY_CURRENT_USER, false);
+			gpoMozilla.reg.open(gpoMozilla.reg.ROOT_KEY_CURRENT_USER, gpoMozilla.registryBasePath, gpoMozilla.reg.ACCESS_READ);
+			if (gpoMozilla.reg.hasChild(gpoMozilla.defaultPath)) {
+				gpoMozilla.setPref(gpoMozilla.reg.ROOT_KEY_CURRENT_USER, false);
 			}
 			else {
 				// If the path is empty
@@ -348,21 +347,21 @@ var gpoThunder = {
 };
 
 /**
- * Method is called as soon as XUL file is loaded
+ * Method is called as soon as the XUL file is loaded
  */
 window.addEventListener("load", function load(event){
 		window.removeEventListener("load", load, false);
 
 		// Extension main method is called
-		gpoThunder.init();
+		gpoMozilla.init();
 
 		// Getting icon element in status bar
 		var element = document.getElementById("gpo-panel");
 
 		// If there is no error
-		if (!gpoThunder.error && gpoThunder.errors.length == 0) {
+		if (!gpoMozilla.error && gpoMozilla.errors.length == 0) {
 			// If one of the paths is empty or if no preferences were applied
-			if (gpoThunder.errorType == 3 && gpoThunder.modifiedElements == 0) {
+			if (gpoMozilla.errorType == 3 && gpoMozilla.modifiedElements == 0) {
 				// Warning icon is shown
 				element.setAttribute("src", "chrome://gpomozilla/content/img/gpo_warn.png");
 				// Warning message is shown
@@ -372,17 +371,17 @@ window.addEventListener("load", function load(event){
 				// Success icon is shown
 				element.setAttribute("src", "chrome://gpomozilla/content/img/gpo_ok.png");
 				// Success message is shown
-				element.setAttribute("tooltiptext","Modified preferences : " + gpoThunder.modifiedElements);
+				element.setAttribute("tooltiptext","Modified preferences : " + gpoMozilla.modifiedElements);
 			}
 
 		}
 		else {
 			// A 's' is added if there is multiple errors
-			var plural = (gpoThunder.errors.length == 1) ? "" : "s";
+			var plural = (gpoMozilla.errors.length == 1) ? "" : "s";
 
 			var errorsText = "";
-			for (var i = 0; i < gpoThunder.errors.length; i++) {
-				errorsText += "   - " + gpoThunder.errors[i] + "\n";
+			for (var i = 0; i < gpoMozilla.errors.length; i++) {
+				errorsText += "   - " + gpoMozilla.errors[i] + "\n";
 			}
 
 			errorsText = "Error"+plural+" :\n" + errorsText;
