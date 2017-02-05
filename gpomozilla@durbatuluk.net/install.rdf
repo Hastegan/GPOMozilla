@@ -3,7 +3,7 @@
 	<Description about="urn:mozilla:install-manifest">
 
     <!-- Unique extension ID -->
-		<em:id>gpomozilla@durbatuluk.com</em:id>
+		<em:id>gpomozilla@durbatuluk.net</em:id>
 
 		<!-- 2 : extension -->
 		<em:type>2</em:type>
@@ -34,7 +34,7 @@
     <em:creator>Hastegan</em:creator>
 
     <!-- Extension website -->
-		<em:homepageURL>http://www.gpomozilla.durbatuluk.com</em:homepageURL>
+		<em:homepageURL></em:homepageURL>
 
     <!-- Targeted apps -->
     <em:targetApplication>

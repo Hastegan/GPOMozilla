@@ -1,4 +1,4 @@
-<center><img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.com/chrome/gpomozilla/content/img/gpo.png">
+<center><img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.net/chrome/gpomozilla/content/img/gpo.png">
 # GPO for Mozilla</center>
 GPO Mozilla is an extension for Firefox Thunderbird and Seamonkey. This extension is compatible with Firefox and Thunderbird 1.5 or higher, and Seamonkey 1.0 or higher.
 ## Usage :
@@ -17,6 +17,6 @@ The extension uses <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Tec
 <br /><br />
 An icon shows informations at the right bottom of the window (not in Firefox, should be fixed later).
 Possible icons :
-- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.com/chrome/gpomozilla/content/img/gpo_fail.png"> : <font color="red">Error</font>, an error as occurred in the script himself (should not happen). If informations on the error(s) are available, they are shown.
-- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.com/chrome/gpomozilla/content/img/gpo_warn.png"> : <font color="orange">Warning</font>, paths to Windows Registry may be false, or no preferences have been updated.
-- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.com/chrome/gpomozilla/content/img/gpo_ok.png"> : <font color="green">Success</font>, no error, the number of modified elements is shown.
+- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.net/chrome/gpomozilla/content/img/gpo_fail.png"> : <font color="red">Error</font>, an error as occurred in the script himself (should not happen). If informations on the error(s) are available, they are shown.
+- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.net/chrome/gpomozilla/content/img/gpo_warn.png"> : <font color="orange">Warning</font>, paths to Windows Registry may be false, or no preferences have been updated.
+- <img src="https://raw.githubusercontent.com/Hastegan/GPOMozilla/master/gpomozilla@durbatuluk.net/chrome/gpomozilla/content/img/gpo_ok.png"> : <font color="green">Success</font>, no error, the number of modified elements is shown.
